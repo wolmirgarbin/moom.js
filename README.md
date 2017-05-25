@@ -2,186 +2,74 @@
 A maneira mais simples de trabalhar eventos e formulários em javascript.
 
 
-
-<html>
-<head>
-	<link rel="stylesheet" type="text/css" href="moom.css">
-</head>
-<body>
+Você conhece JQuery?
+Você gosta de JQuery?
+Você quer utilizar ou aprender outros frameworks pra aumentar sua produtividade?
 
 
-<div moom-controller="moomController">
-	<div moom-view="list">
-		<div>
-			<table>
-				<tbody>
-					<tr moom-for="item in list">
-						<td moom-text="nome"></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-
-		<div>
-			<input name="nome">
-			<input name="sobrenome" moom-event="keyup->mostraMensagem">
-			<input name="idade">
-			<input name="anos">
-			<select name="sexo">
-				<option>Masculino</option>
-				<option>Feminino</option>
-			</select>
-		</div>
-
-		<button moom-event="save" moom-updateTo="sobrenome">Save</button>
-		<button moom-event="addData">Adicionar data!</button>
-		<button moom-event="mostra">Mostra Ok!</button>
-
-		<button moom-toView="form">To Form</button>
-	</div>
-
-	<div moom-view="form">
-		<div>
-			Form
-		</div>
-
-		<button moom-event="salvar" moom-toView="list">Salvar</button>
-		<button moom-toView="list">To List</button>
-	</div>
-</div>
+Apresentamos a você o moom.js
 
 
+A maneira mais simples de tratar eventos e escrever javascript de maneira leve, rápida e descomplicada. 
+E o melhor, funciona com JQUERY.
 
-<br>
 
+# Como iniciar 
 
+Mais fácil impossível!!!
 
+Faça a importação do jQuery em sua página e a importação do Moom e pronto, nada de nodejs, nada de typescript e nada de outros frameworks atrasando o seu desenvolvimento.
+
+<!-- importe o css -->
+<link rel="stylesheet" type="text/css" href="moom.css">
+
+<!-- importe o js -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="moom.js"></script>
+
+# Como funciona
+
+Tudo no moom é baseado em controller e view. Basta colocar em seu html em que vai utilizar o moom como controlador o moom-controller e o moom-view, como mostrado abaixo.
 
 <div moom-controller="moomCtrl01">
-	<div moom-view="pane01">
-		<div>
-			Pane 01
-		</div>
-
-		<button moom-toView="pane02">To Pane 02</button>
-	</div>
-
-	<div moom-view="pane02">
-		<div>
-			Pane 02
-		</div>
-		<button moom-toView="pane01">To Pane 01</button>
-	</div>
-</div>
-
-
-
-<br>
-
-
-
-
-<div moom-controller="moomCtrl02">
 	<div moom-view="teste">
 		<div>
 			Unica view
 		</div>
-
-		<button moom-event="teste">Teset</button>
 	</div>
 </div>
 
+e iniciar o moom como controlador:
 
+new Moom('moomCtrl01');
 
-<br>
+# Tratando evendos 
 
+É mais fácil que chorar em alemão!!!
 
+Basta colocar dentro de qualquer controlador do moom em qualquer tag do HTML o atributo moom-event e dizer qual evento ele deve chamar.
 
-
-<div moom-controller="sample">
-	<div moom-view="index">
-		<p moom-event="mousedown->alterarCor">Qualquer texto aqui!</p>
-		<button moom-event="evento">Evento</button>
+<div moom-controller="moomCtrl02">
+	<div moom-view="teste">
+		<button moom-event="alerta">Alerta</button>
 	</div>
 </div>
 
+O código js fica assim:
 
-
-
-
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="moom.js"></script>
-<script type="text/javascript">
-	var moom = new Moon('moomController', {
-		data : {
-			list: [
-				{nome: 'Wolmir'},
-				{nome: 'Cesar'},
-				{nome: 'Garbin'},
-				{nome: 'Teste'},
-				{nome: 'masdlkjasldjalsdjk'}
-			],
-			pessoas : [
-				{nome: "Wolmir"}
-			]
-		},
-		events : {
-			save : function($ele, data) {
-				$.ajax({
-					type: "GET",
-					url: "remove-file",
-					data: data,
-					dataType: "json",
-					traditional:true,
-					cache:true,
-					contentType:"application/x-www-form-urlencoded; charset=UTF-8",
-					timeout:45000
-				}).done(function(json) {
-					alert( json );
-				}).fail(function(){
-					alert( "fail" );
-				});
-			},
-			addData : function() {
-				moom.set( {nome: 'Wolmir Garbin', anos: 12, idade: 23} );
-			},
-			mostra : function() {
-				moom.set( {nome: 'Wolmir', sobrenome: 'Garbin'} );
-			},
-			qualquer : function($ele) {
-				alert('Qualquer coisa ');
-				$ele.text('Teste st est stse tset');
-			},
-			mostraMensagem : function($ele, data) {
-				alert($ele.val() +' ou '+ data.sobrenome );
-			}
+new Moon('moomCtrl02', {
+	events: {
+		alerta : function() {
+			alert('Isso funciona mesmo!');
 		}
-	});
+	}
+});
 
+Automaticamente o evento é associado ao click mas você pode dizer em qual evento chamar sem alterar o código, que beleza!!!
 
-	new Moon('moomCtrl01');
+Como?
+No botão acrescente o evento e aponte para o evento que deve chamar:
 
+<button moom-event="mouseup->alerta">Alerta</button>
 
-	new Moon('moomCtrl02', {
-		events: {
-			teste : function() {
-				alert('Teste');
-			}
-		}
-	});
-
-
-	new Moon('sample', {
-		events: {
-			evento: function($ele, data) {
-				alert('Teste');
-			},
-			alterarCor : function($ele) {
-				$ele.css({color: '#CCC'});
-			}
-		}
-	});
-
-</script>
-</body>
-</html>
+Simples assim, logo adicionaremos uma versão mais incrivel ainda do moom.js o menor javascript para sua vida!
