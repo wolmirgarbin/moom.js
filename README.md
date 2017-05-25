@@ -20,17 +20,20 @@ Mais fácil impossível!!!
 
 Faça a importação do jQuery em sua página e a importação do Moom e pronto, nada de nodejs, nada de typescript e nada de outros frameworks atrasando o seu desenvolvimento.
 
+```html
 <!-- importe o css -->
 <link rel="stylesheet" type="text/css" href="moom.css">
 
 <!-- importe o js -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="moom.js"></script>
+```
 
 # Como funciona
 
 Tudo no moom é baseado em controller e view. Basta colocar em seu html em que vai utilizar o moom como controlador o moom-controller e o moom-view, como mostrado abaixo.
 
+```html
 <div moom-controller="moomCtrl01">
 	<div moom-view="teste">
 		<div>
@@ -38,10 +41,13 @@ Tudo no moom é baseado em controller e view. Basta colocar em seu html em que v
 		</div>
 	</div>
 </div>
+```
 
 e iniciar o moom como controlador:
 
+```
 new Moom('moomCtrl01');
+```
 
 # Tratando evendos 
 
@@ -49,14 +55,17 @@ new Moom('moomCtrl01');
 
 Basta colocar dentro de qualquer controlador do moom em qualquer tag do HTML o atributo moom-event e dizer qual evento ele deve chamar.
 
+```html
 <div moom-controller="moomCtrl02">
 	<div moom-view="teste">
 		<button moom-event="alerta">Alerta</button>
 	</div>
 </div>
+```
 
 O código js fica assim:
 
+```
 new Moon('moomCtrl02', {
 	events: {
 		alerta : function() {
@@ -64,12 +73,14 @@ new Moon('moomCtrl02', {
 		}
 	}
 });
+```
 
 Automaticamente o evento é associado ao click mas você pode dizer em qual evento chamar sem alterar o código, que beleza!!!
 
 Como?
 No botão acrescente o evento e aponte para o evento que deve chamar:
 
+```html
 <button moom-event="mouseup->alerta">Alerta</button>
-
+```
 Simples assim, logo adicionaremos uma versão mais incrivel ainda do moom.js o menor javascript para sua vida!
