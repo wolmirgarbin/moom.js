@@ -49,7 +49,7 @@ e iniciar o moom como controlador:
 new Moom('moomCtrl01');
 ```
 
-# Tratando evendos 
+# Tratando eventos 
 
 É mais fácil que chorar em alemão!!!
 
@@ -83,4 +83,17 @@ No botão acrescente o evento e aponte para o evento que deve chamar:
 ```html
 <button moom-event="mouseup->alerta">Alerta</button>
 ```
+E o javascript continua igual não importa o evento, evento ser sempre um evento.
+
+```
+new Moon('moomCtrl02', {
+	events: {
+		alerta : function() {
+			alert('Isso funciona mesmo!');
+		}
+	}
+});
+```
+
+
 Simples assim, logo adicionaremos uma versão mais incrivel ainda do moom.js o menor javascript para sua vida!
