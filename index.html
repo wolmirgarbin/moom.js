@@ -189,6 +189,30 @@
 		}
 	});
 
+
+
+
+	var callbacks = jQuery.Callbacks()
+	  , Topic = {
+	      publish: callbacks.fire,
+	      subscribe: callbacks.add,
+	      unsubscribe: callbacks.remove
+	    }
+
+	function fn1( value ){
+	  console.log( "fn1: " + value );
+	}
+
+	function fn2( value ){
+	  console.log("fn2: " + value);
+	}
+
+	Topic.subscribe(fn1);
+	Topic.subscribe(fn2);
+
+	Topic.publish('hello world!');
+	Topic.publish('woo! mail!');
+
 </script>
 </body>
 </html>

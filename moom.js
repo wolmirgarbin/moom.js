@@ -5,11 +5,24 @@
 
 	$elements.each(function(){
 		var $ele = $(this);
-		data[$ele.attr('name')] = $ele.val();
+		data[$ele.attr('name')] = val( $ele );
 	});
 
 	return data;
 };
+
+/**
+ * Obtem os valores dos elementos do form
+ * @param $ele
+ * @returns {*}
+ */
+function val($ele) {
+    if( $ele.attr('type') == 'checkbox' ) {
+    	return $ele.is(':checked');
+    } else {
+        return $ele.val();
+	}
+}
 
 
 function validationReturn($view, settings) {
@@ -37,6 +50,13 @@ function validationReturn($view, settings) {
 
 
 var initEvents = function($m, settings) {
+    
+   
+	/*Object.observe(settings.data, function(changes) {
+	  	console.log(changes);
+	});*/
+
+
     var $mv =  $m.find('*[moom-view]');
  	var $me =  $m.find('*[moom-event]');
  	var $mto =  $m.find('*[moom-toView]');
@@ -144,6 +164,7 @@ function Moon(element, options) {
 	var $m = $( '*[moom-controller='+ element +']');
 
 	var settings = $.extend({
+		on : function() {},
         data : {},
         events : {},
         listen : {},
@@ -168,5 +189,7 @@ function Moon(element, options) {
 	};*/
 
 	initEvents($m, settings);
+
+	settings.on();
 
 };
