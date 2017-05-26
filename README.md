@@ -49,6 +49,26 @@ e iniciar o moom como controlador:
 new Moom('moomCtrl01');
 ```
 
+# On load
+
+Todos os eventos que gostaria que fossem executados após o onload da página podem ser adicionadas a funcão on, como mostrado abaixo onde tem a criação de um autocomplete do jquery ui:
+
+```
+new Moom('controllerName', {
+	on : function() {
+		$('#input').autocomplete({
+		    source: "/url",
+		    minLength: 2,
+		    select: function( event, ui ) {
+			
+		    }
+		});
+	},
+    ...
+```
+ 
+Assim você não precisa utilizar o jquery para fazer esta execução inicial de atribuição de eventos
+
 # Tratando eventos 
 
 É mais fácil que chorar em alemão!!!
@@ -66,7 +86,7 @@ Basta colocar dentro de qualquer controlador do moom em qualquer tag do HTML o a
 O código js fica assim:
 
 ```
-new Moon('moomCtrl02', {
+new Moom('moomCtrl02', {
 	events: {
 		alerta : function() {
 			alert('Isso funciona mesmo!');
@@ -86,7 +106,7 @@ No botão acrescente o evento e aponte para o evento que deve chamar:
 E o javascript continua igual não importa o evento, evento ser sempre um evento.
 
 ```
-new Moon('moomCtrl02', {
+new Moom('moomCtrl02', {
 	events: {
 		alerta : function() {
 			alert('Isso funciona mesmo!');
