@@ -1,1 +1,4 @@
 *[moom-controller] > div { display: none; }
+
+/* VALIDATION */
+.moom-error { border-color: red; }

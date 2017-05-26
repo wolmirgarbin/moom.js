@@ -18,9 +18,9 @@
 		</div>
 
 		<div>
-			<input name="nome">
-			<input name="sobrenome" moom-event="keyup->mostraMensagem">
-			<input name="idade">
+			<input name="nome" moom-data-ignore>
+			<input name="sobrenome" moom-event="mouseover->mostraMensagem">
+			<input name="idade" moom-validation="number">
 			<input name="anos">
 			<select name="sexo">
 				<option>Masculino</option>
@@ -48,7 +48,6 @@
 
 
 <br>
-
 
 
 
@@ -115,17 +114,18 @@
 				{nome: 'Garbin'},
 				{nome: 'Teste'},
 				{nome: 'masdlkjasldjalsdjk'}
-			],
-			pessoas : [
-				{nome: "Wolmir"}
 			]
 		},
 		events : {
-			save : function($ele, data) {
+			save : function(param) {
+				var thisParan = param;
+				param.element.attr({'disabled':'true'});
+				param.element.text('Aguarde');
+
 				$.ajax({
 					type: "GET",
 					url: "remove-file",
-					data: data,
+					data: param.data,
 					dataType: "json",
 					traditional:true,
 					cache:true,
@@ -133,22 +133,34 @@
 					timeout:45000
 				}).done(function(json) {
 					alert( json );
+
+					param.element.removeAttr('disabled');
+					param.element.text('Salvar');
+					
 				}).fail(function(){
-					alert( "fail" );
+					console.log( "fail" );
+
+					param.element.removeAttr('disabled');
+					param.element.text('Salvar');
 				});
 			},
-			addData : function() {
+			addData : function(param) {
 				moom.set( {nome: 'Wolmir Garbin', anos: 12, idade: 23} );
 			},
-			mostra : function() {
+			mostra : function(param) {
 				moom.set( {nome: 'Wolmir', sobrenome: 'Garbin'} );
 			},
-			qualquer : function($ele) {
-				alert('Qualquer coisa ');
-				$ele.text('Teste st est stse tset');
+			qualquer : function(param) {
+				console.log('Qualquer coisa ');
 			},
-			mostraMensagem : function($ele, data) {
-				alert($ele.val() +' ou '+ data.sobrenome );
+			mostraMensagem : function(param) {
+				console.log(param.element.val() +' ou '+ param.data.sobrenome );
+				console.log( param.validation );
+			}
+		},
+		validation: {
+			number : function($ele) {
+				return $ele.val() == '' || $ele.val() == '123';
 			}
 		}
 	});

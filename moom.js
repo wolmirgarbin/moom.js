@@ -1,46 +1,41 @@
-/**********************************************
-* Moom.js 
-* Version: 1.0
-* A maneira mais simples para trabalhar com eventos e dados em formulários utilizando jquery
-**********************************************/
-
-/**
- * Criar o objeto com os dados
- * @param $view
- * @returns {*}
- */
 ;function dataFormToView($view) {
-	var $elements = $view.find('input,select,textarea');
+	var $elements = $view.find('*[name]:not([moom-data-ignore])');
 
 	var data = {};
 
 	$elements.each(function(){
 		var $ele = $(this);
-		data[$ele.attr('name')] = val( $ele );
+		data[$ele.attr('name')] = $ele.val();
 	});
 
 	return data;
 };
 
-/**
- * Obtem os valores dos elementos do form
- * @param $ele
- * @returns {*}
- */
-function val($ele) {
-    if( $ele.attr('type') == 'checkbox' ) {
-    	return $ele.is(':checked');
-    } else {
-        return $ele.val();
-	}
-}
+
+function validationReturn($view, settings) {
+	var $elements = $view.find('*[name]:not([moom-data-ignore])');
+
+	var validation = [];
+
+	$elements.each(function(){
+		var $ele = $(this);
+
+		var fnVal = $ele.attr('moom-validation');
+
+		if( fnVal != undefined ) {
+			if( settings.validation[ fnVal ]( $ele ) ) {
+				$ele.removeClass('moom-error');
+			} else {
+				$ele.addClass('moom-error');
+				validation[ $ele.attr('name') ] = $ele;
+			}
+		}
+	});
+
+	return validation;
+};
 
 
-/**
- * Inicia todos os eventos dos elementos
- * @param $m
- * @param settings
- */
 var initEvents = function($m, settings) {
     var $mv =  $m.find('*[moom-view]');
  	var $me =  $m.find('*[moom-event]');
@@ -98,20 +93,30 @@ var initEvents = function($m, settings) {
 
  		if( content.indexOf( '->') != -1 ) {
  			var eventFn = content.split('->');
-			$ele.on( eventFn[0] +'.moom', function(e) {
-                e.preventDefault();
+			$ele.on( eventFn[0] +'.moom', function() {
 	 			var $fn = settings.events[ eventFn[1] ];
 
-	 			if( $fn != undefined )
-	 				$fn( $ele, dataFormToView( $me.parents('*[moom-view]') ) );
+	 			if( $fn != undefined ) {
+	 				var $moomView = $me.parent('*[moom-view]');
+	 				param = {};
+	 				param.element = $ele;
+	 				param.data = dataFormToView( $moomView );
+	 				param.validation = validationReturn( $moomView, settings );
+	 				$fn( param );
+	 			}
 	 		});
  		} else {
-	 		$ele.on('click.moom', function(e) {
-                e.preventDefault();
+	 		$ele.on('click.moom', function() {
 	 			var $fn = settings.events[content];
 
-	 			if( $fn != undefined )
-	 				$fn( $ele, dataFormToView( $me.parents('*[moom-view]') ) );
+	 			if( $fn != undefined ) {
+	 				var $moomView = $me.parent('*[moom-view]');
+	 				param = {};
+	 				param.element = $ele;
+	 				param.data = dataFormToView( $moomView );
+	 				param.validation = validationReturn( $moomView, settings );
+	 				$fn( param );
+	 			}
 	 		});
 	 	}
  	});
@@ -134,24 +139,25 @@ var initEvents = function($m, settings) {
 
 
 
-function Moom(element, options) {
+function Moon(element, options) {
 
 	var $m = $( '*[moom-controller='+ element +']');
 
 	var settings = $.extend({
-		on : function() {},
-        	data : {},
-        	events : {}
-    	}, options );
+        data : {},
+        events : {},
+        listen : {},
+        validation : {}
+    }, options );
 
 
-    	this.set = function(data) {
+    this.set = function(data) {
 		var names = Object.getOwnPropertyNames(data);
 
 		for(i in names) {
 			$m.find('[name='+ names[i] +']').val( data[names[i]] );
 		}
-    	};
+    };
 
 	/*this.data : function() {
 		return settings.data;
@@ -163,5 +169,4 @@ function Moom(element, options) {
 
 	initEvents($m, settings);
 
-    	settings.on();
 };
